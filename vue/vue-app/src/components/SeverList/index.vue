@@ -6,14 +6,10 @@ import ServerButton from "./ServerButton.vue"
   <ServerButton isHome/>
   <div class="separator"></div>
   <ServerButton :mentions="3" />
-  <ServerButton />
+  <ServerButton has-notification :mentions="1"/>
   <ServerButton />
   <ServerButton has-notification/>
-  <ServerButton />
-  <ServerButton />
-  <ServerButton />
-  <ServerButton :mentions="999" />
-  <ServerButton :mentions="3" />
+  <server-button v-for="servers in 24" :key="servers.id"/>
 </div>
 </template>
 
@@ -28,12 +24,18 @@ import ServerButton from "./ServerButton.vue"
   flex-direction: column;
   align-items: center;
   background-color: var(--tertiary);
-  /*padding: 11px 0;*/
   max-height: 100vh;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar{
+    display: none;
+
+  }
 }
 .separator{
   width: 32px;
-  border-bottom: solid 2px var(--quaternary);
+  border-bottom: solid 3px var(--quaternary);
   margin-bottom: 8px;
 }
 </style>

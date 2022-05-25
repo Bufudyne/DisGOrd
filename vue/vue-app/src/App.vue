@@ -1,10 +1,14 @@
 <script setup>
 import ServerList from "./components/SeverList/index.vue"
+import ServerName from "./components/ServerName/index.vue"
+import ChannelList from "./components/ChannelList/index.vue"
 </script>
 
 <template>
   <div id="grid">
-      <ServerList />
+    <server-list/>
+    <server-name/>
+    <channel-list/>
   </div>
 </template>
 
@@ -12,9 +16,6 @@ import ServerList from "./components/SeverList/index.vue"
 
 export default {
   name: "App",
-  components:{
-    ServerList
-  }
 }
 </script>
 

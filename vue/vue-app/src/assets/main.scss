@@ -12,12 +12,13 @@
 
 html, body, #app {
   height: 100%;
+  background-color: var(--tertiary);
 }
 
 :root {
-  --primary: #36393f;
+  --primary: #36393F;
   --secondary: #2f3136;
-  --tertiary: rgb(32, 34, 37);
+  --tertiary: #202225;
   --quaternary: #292b2f;
   --quinary: #393d42;
   --senary: #828386;
@@ -31,7 +32,7 @@ html, body, #app {
   --discord: #6e86d6;
   --mention-detail: #f9a839;
   --mention-message: #413f3f;
-
+  --hover: #3C3F45;
   --link: #5d80d6;
 
   --rocketseat: #6633cc;

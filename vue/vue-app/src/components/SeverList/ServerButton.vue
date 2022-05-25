@@ -4,7 +4,8 @@
       <span v-if="hasNotification" class="notification"></span>
     </div>
     <div class="server-button" :class="{'home':isHome}">
-      <div v-if="mentions>0" class="mention">{{ mentions}}</div>
+      <img src="../../assets/discord.svg" v-if="isHome" alt=""/>
+      <div v-if="mentions>0" class="mention">{{ mentions }}</div>
     </div>
   </div>
 
@@ -27,18 +28,25 @@ export default {
   flex-shrink: 0;
   width: 48px;
   height: 48px;
+  padding-top: 11px;
   margin-bottom: 8px;
   background-color: var(--primary);
   cursor: pointer;
   border-radius: 50%;
   transition: 0.2s;
+  justify-content: center;
 
   &.active,
   &:hover {
     border-radius: 20%;
     background-color: var(--discord);
   }
-  .mention{
+  img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .mention {
     position: relative;
     background-color: var(--notification);
     padding: 0 3px;
@@ -52,16 +60,17 @@ export default {
     color: var(--white);
   }
 }
-.home{
-  background-color: var(--rocketseat);
+
+.home {
   margin-top: 10px;
 
   &.active,
-  &:hover{
+  &:hover {
     border-radius: 20%;
-    background-color: var(--rocketseat);
+    background-color: var(--discord);
   }
 }
+
 .server-list-item {
   display: flex;
   width: 72px;
@@ -75,17 +84,17 @@ export default {
   width: 12px;
   height: 48px;
   align-items: center;
-
+  .notification {
+    position: relative;
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 0 4px 4px 0;
+    margin-left: -4px;
+    background-color: var(--white);
+  }
 }
 
-.notification {
-  position: absolute;
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 0 4px 4px 0;
-  margin-left: -4px;
-  background-color: var(--white);
-}
+
 
 </style>
