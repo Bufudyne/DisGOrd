@@ -1,9 +1,10 @@
 <template>
   <div class="server-list-item">
     <div class="notification-wrapper">
-      <span v-if="hasNotification" class="notification"></span>
+      <span v-if="hasNotification" class="notification" :class="{ 'active':isHover}"></span>
     </div>
-    <div class="server-button" :class="{'home':isHome}">
+    <div class="server-button" :class="{'home':isHome}" @mouseover="isHover = true"
+         @mouseleave="isHover = false">
       <img src="../../assets/discord.svg" v-if="isHome" alt=""/>
       <div v-if="mentions>0" class="mention">{{ mentions }}</div>
     </div>
@@ -11,15 +12,13 @@
 
 </template>
 
-<script>
-export default {
-  props: {
-    isHover: Boolean,
-    isHome: Boolean,
-    hasNotification: Boolean,
-    mentions: Number,
-  }
-}
+<script setup>
+defineProps({
+  isHover: Boolean,
+  isHome: Boolean,
+  hasNotification: Boolean,
+  mentions: Number,
+})
 </script>
 
 <style scoped lang="scss">
@@ -41,6 +40,7 @@ export default {
     border-radius: 20%;
     background-color: var(--discord);
   }
+
   img {
     width: 24px;
     height: 24px;
@@ -84,6 +84,7 @@ export default {
   width: 12px;
   height: 48px;
   align-items: center;
+
   .notification {
     position: relative;
     display: block;
@@ -92,9 +93,13 @@ export default {
     border-radius: 0 4px 4px 0;
     margin-left: -4px;
     background-color: var(--white);
+    transition:0.18s;
+
+    &.active {
+      height: 18px;
+    }
   }
 }
-
 
 
 </style>

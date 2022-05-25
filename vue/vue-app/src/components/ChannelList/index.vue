@@ -1,4 +1,5 @@
 <script setup>
+import ChannelButton from "./ChannelButton.vue"
 import ExpandIcon from "vue-material-design-icons/ChevronDown.vue";
 import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
 <template>
@@ -14,7 +15,9 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
         <plus-category-icon :size="21"/>
       </div>
     </div>
+    <channel-button/>
   </div>
+
 </template>
 
 <script>
@@ -26,7 +29,7 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
   grid-area: CL;
   display: flex;
   flex-direction: column;
-  padding: 18px 10px 0 8px;
+  padding: 18px 2px 0 8px;
   background-color: var(--secondary);
 }
 
@@ -38,6 +41,7 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
   margin-bottom: 6px;
   color: var(--grey);
   text-transform: uppercase;
+  font-size: 12px;
   font-weight: bold;
   cursor: pointer;
 
