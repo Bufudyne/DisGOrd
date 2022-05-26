@@ -2,7 +2,7 @@
 import ServerButton from "./ServerButton.vue"
 </script>
 <template>
-<div class="container">
+<div class="channel-list">
   <ServerButton isHome/>
   <div class="separator"></div>
   <ServerButton :mentions="3" />
@@ -18,7 +18,7 @@ import ServerButton from "./ServerButton.vue"
 </script>
 
 <style scoped lang="scss">
-.container{
+.channel-list{
   grid-area: SL;
   display: flex;
   flex-direction: column;

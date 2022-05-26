@@ -2,6 +2,7 @@
 import ServerList from "./components/SeverList/index.vue"
 import ServerName from "./components/ServerName/index.vue"
 import ChannelList from "./components/ChannelList/index.vue"
+
 </script>
 
 <template>

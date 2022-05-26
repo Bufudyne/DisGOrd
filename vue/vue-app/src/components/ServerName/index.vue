@@ -2,7 +2,7 @@
 import ExpandIcon from "vue-material-design-icons/ChevronDown.vue";
 import BiohazardIcon from "vue-material-design-icons/VectorBezier.vue"</script>
 <template>
-  <div class="container">
+  <div class="channel-list">
     <div class="title-container">
       <div class="icon">
         <BiohazardIcon :size="18"></BiohazardIcon>
@@ -21,7 +21,7 @@ import BiohazardIcon from "vue-material-design-icons/VectorBezier.vue"</script>
 </script>
 
 <style scoped lang="scss">
-.container {
+.channel-list {
   grid-area: SN;
   display: flex;
   align-items: center;

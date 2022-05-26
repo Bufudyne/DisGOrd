@@ -1,4 +1,7 @@
-import { createApp } from "vue";
-import App from "./App.vue";
+import {createApp} from "vue";
+import App from './App.vue'
+import {Accordion, AccordionPanel, AccordionPanelHeader, AccordionPanelContent} from 'vue3-accessible-accordions';
 
-createApp(App).mount("#app");
+const app = createApp(App);
+
+app.mount("#app");
