@@ -1,13 +1,18 @@
 <script setup>
 import HashTagIcon from "vue-material-design-icons/Pound.vue";
 import InviteIcon from "vue-material-design-icons/AccountPlus.vue";
-import SettingsIcon from "vue-material-design-icons/CogOutline.vue";</script>
+import SettingsIcon from "vue-material-design-icons/CogOutline.vue";
+const props = defineProps({
+  channelName:{type: String, required: true},
+  isActive:{type: Boolean}
+})
+</script>
 <template>
-  <div class="icon-visibility-wrapper">
+  <div class="icon-visibility-wrapper" @click="isActive = !isActive">
     <div class="card">
       <div class="channel-info">
         <hash-tag-icon :size="20" class="hash-icon"/>
-        <div class="channel-name overflow">announcementannouncementannouncementannouncement</div>
+        <div class="channel-name overflow" :class="{'selected':isActive}">{{channelName}}</div>
       </div>
       <div class="channel-actions">
         <invite-icon :size="20" class="icon-actions"/>
@@ -17,14 +22,11 @@ import SettingsIcon from "vue-material-design-icons/CogOutline.vue";</script>
   </div>
 </template>
 
-<script>
-
-</script>
 
 <style lang="scss" scoped>
 .icon-visibility-wrapper {
   padding: 0 8px;
-
+  height: 34px;
   .card {
     display: flex;
     flex-direction: row;
@@ -56,8 +58,9 @@ import SettingsIcon from "vue-material-design-icons/CogOutline.vue";</script>
       .icon-actions {
         color: var(--symbol);
         margin-left: 4px;
+
         &.active,
-        &:hover{
+        &:hover {
           color: var(--white);
         }
       }
@@ -76,20 +79,24 @@ import SettingsIcon from "vue-material-design-icons/CogOutline.vue";</script>
       overflow: hidden;
       position: relative;
     }
+
     &.active,
     &:hover {
       background-color: var(--quinary);
       border-radius: 4px;
+
       .channel-name {
-          color: var(--white);
+        color: var(--halfgrey);
       }
-      .overflow{
+
+      .overflow {
         width: 140px;
       }
 
       .channel-actions {
         display: flex;
       }
+
     }
   }
 }

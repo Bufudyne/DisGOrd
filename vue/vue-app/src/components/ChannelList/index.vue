@@ -21,16 +21,19 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
         </div>
       </template>
       <template #content>
-        <channel-button/>
+        <channel-button channel-name="1" is-active="true"/>
+        <channel-button channel-name="2"/>
+        <channel-button channel-name="3"/>
+        <channel-button channel-name="4"/>
+        <channel-button channel-name="5"/>
+        <channel-button channel-name="6"/>
+        <channel-button channel-name="7"/>
+        <channel-button channel-name="8"/>
       </template>
     </accordion>
   </div>
 
 </template>
-
-<script>
-
-</script>
 
 <style lang="scss" scoped>
 .channel-list {
@@ -48,7 +51,6 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 6px;
   color: var(--grey);
   text-transform: uppercase;
   font-size: 12px;
@@ -60,7 +62,7 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
     margin-left: auto;
   }
   .category__name{
-    font-family: Whitney-Black;
+    font-family: Whitney-Black, sans-serif;
   }
 
   .category-icon {

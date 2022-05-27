@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-defineProps({
+const props= defineProps({
   isHover: Boolean,
   isHome: Boolean,
   hasNotification: Boolean,

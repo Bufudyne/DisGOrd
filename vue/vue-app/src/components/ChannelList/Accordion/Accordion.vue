@@ -1,9 +1,3 @@
-<script setup>
-import AccordionBase from "./accordion";
-import AccordionPanelHeader from "./accordion-panel-header";
-import AccordionPanelContent from "./accordion-panel-content";
-import AccordionPanel from "./accordion-panel";
-</script>
 <template>
   <accordion-base :collapsible="true" :expandable="true">
     <accordion-panel>
@@ -17,17 +11,14 @@ import AccordionPanel from "./accordion-panel";
   </accordion-base>
 </template>
 
-<script>
+<script setup>
 import {ref} from 'vue';
-export default {
-  name: 'Accordion',
+import AccordionBase from "./accordion";
+import AccordionPanelHeader from "./accordion-panel-header";
+import AccordionPanelContent from "./accordion-panel-content";
+import AccordionPanel from "./accordion-panel";
 
-  setup() {
-    const active_panel = ref(0);
+const active_panel = ref(0);
 
-    return {
-      active_panel,
-    };
-  },
-};
+
 </script>
