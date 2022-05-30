@@ -2,6 +2,8 @@
 import ServerList from "./components/SeverList/index.vue"
 import ServerName from "./components/ServerName/index.vue"
 import ChannelList from "./components/ChannelList/index.vue"
+import UserInfo from "./components/UserInfo/UserInfo.vue";
+import ChannelInfo from "./components/ChannelInfo/ChannelInfo.vue";
 
 </script>
 
@@ -10,6 +12,8 @@ import ChannelList from "./components/ChannelList/index.vue"
     <server-list/>
     <server-name/>
     <channel-list/>
+    <user-info/>
+    <channel-info/>
   </div>
 </template>
 
