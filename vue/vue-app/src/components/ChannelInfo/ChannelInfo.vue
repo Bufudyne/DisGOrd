@@ -3,7 +3,7 @@
     <hashtag-icon class="channel-info__icon" :size="24"/>
     <h1 class="channel-info__title">Chat Title</h1>
     <div class="channel-info__separator"></div>
-    <div class="channel-info__description"> afsfasdfsdafsfasdfsdafsfasdfsdafsfasdfsdafsfasdfsdafsfasdfsdafsfasdfsdafsfasdfsdafsf</div>
+    <div class="channel-info__description"> A description</div>
   </div>
 </template>
 
