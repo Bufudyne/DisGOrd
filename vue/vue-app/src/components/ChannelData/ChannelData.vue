@@ -2,24 +2,32 @@
   <div class="channel-data">
     <div class="channel-data__messages">
       <channel-message
-        author="Lol"
-        date="12/21/2323"
-        content="asdfafsf"
-        is-mention=True,
-        is-bot=True
+          author="Lol"
+          content="asdfafsf"
+          date="12/21/2323"
+          is-bot=True
+          is-mention=True,
       />
       <channel-message
           author="Lol"
-          date="12/21/2323"
           content="asdfafsf"
+          date="12/21/2323"
+
+      />
+      <channel-message v-for="data in messages"
+                       :author=data.author
+                       :content=data.message
+                       date="12/21/2323"
 
       />
 
     </div>
     <div class="channel-data__input-wrapper">
-      <input type="text" name="text" placeholder="Message #yada" id="">
+      <form @submit.prevent="sendws">
+        <input  placeholder="Message #yada" type="text" v-model="message">
+      </form>
       <div class="channel-data__icon">
-        <at-icon @click="sendws" :size="24"/>
+        <at-icon :size="24"/>
       </div>
     </div>
   </div>
@@ -28,17 +36,32 @@
 <script setup>
 import AtIcon from "vue-material-design-icons/At.vue"
 import ChannelMessage from "./ChannelMessage.vue"
+import {reactive, ref} from "vue";
+const message = ref('')
+const messages = reactive([])
+const websocket = new WebSocket("ws://localhost:4001/ws")
 
-const websocket= new WebSocket("ws://localhost:4001/ws")
-
-
-websocket.onopen=()=>console.log("test")
-function sendws(){
-  let msg={
-    "greeting": "fuck you"
+websocket.onmessage = (msg) => {
+  let data = JSON.parse(msg.data)
+  switch (data.action) {
+    case "user_message":
+      messages.push(data);
+      break;
   }
 
-  websocket.send(JSON.stringify(msg))
+}
+
+
+websocket.onopen = () => console.log("test")
+
+function sendws() {
+  let jsonData = {};
+  jsonData["action"] = "send_to_channel";
+  jsonData["message"] = message.value;
+  websocket.send(JSON.stringify(jsonData));
+  message.value="";
+
+
 }
 </script>
 
@@ -52,7 +75,7 @@ function sendws(){
   flex: 1;
   min-width: 390px;
 
-  &__messages{
+  &__messages {
     display: flex;
     flex-direction: column;
     max-height: calc(100vh - 40px - 68px);
@@ -61,24 +84,26 @@ function sendws(){
     scrollbar-width: thin;
     scrollbar-color: var(--tertiary) var(--secondary);
 
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
       width: 8px;
     }
-    &::-webkit-scrollbar-thumb{
+
+    &::-webkit-scrollbar-thumb {
       background-color: var(--tertiary);
       border-radius: 4px;
     }
-    &::-webkit-scrollbar-track{
+
+    &::-webkit-scrollbar-track {
       background-color: var(--secondary);
     }
   }
 
-  &__input-wrapper{
+  &__input-wrapper {
     width: 100%;
     padding: 0 16px;
     height: 68px;
 
-    input{
+    input {
       width: 100%;
       height: 44px;
       padding: 0 10px 0 57px;
@@ -87,13 +112,14 @@ function sendws(){
       background-color: var(--chat-input);
       position: relative;
 
-      &::placeholder{
+      &::placeholder {
         color: var(--grey);
       }
     }
 
   }
-  &__icon{
+
+  &__icon {
     color: var(--grey);
     position: relative;
     top: -50%;

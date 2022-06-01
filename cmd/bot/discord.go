@@ -1,25 +1,53 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-var s *discordgo.Session
+// Token Variables used for command line parameters
+var (
+	Token string
+)
 
-func (app *application) startBot() error {
+type config struct {
+	port int
+	env  string
+	api  string
+	db   struct {
+		dsn string
+	}
+	bot struct {
+		token string
+	}
+}
+type application struct {
+	config   config
+	infoLog  *log.Logger
+	errorLog *log.Logger
+	version  string
+}
+
+func init() {
+	flag.StringVar(&Token, "t", "NjAwNzUxNzk3MzIxMzM0Nzg0.GIcqhB.V_T63zjl2grc4F_YTIgI7bzAETiq_IQgju6_KY", "Bot Token")
+	flag.Parse()
+}
+
+func main() {
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + app.config.bot.token)
+	dg, err := discordgo.New("Bot " + Token)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
-		return err
+		return
 	}
-	s = dg
+
 	// Register the messageCreate func as a callback for MessageCreate events.
-	dg.AddHandler(app.messageCreate)
+	dg.AddHandler(messageCreate)
 
 	// Just like the ping pong example, we only care about receiving message
 	// events in this example.
@@ -29,7 +57,7 @@ func (app *application) startBot() error {
 	err = dg.Open()
 	if err != nil {
 		fmt.Println("error opening connection,", err)
-		return err
+		return
 	}
 
 	// Wait here until CTRL-C or other term signal is received.
@@ -41,9 +69,8 @@ func (app *application) startBot() error {
 	// Cleanly close down the Discord session.
 	err = dg.Close()
 	if err != nil {
-		return err
+		return
 	}
-	return nil
 }
 
 // This function will be called (due to AddHandler above) every time a new
@@ -51,12 +78,7 @@ func (app *application) startBot() error {
 //
 // It is called whenever a message is created but only when it's sent through a
 // server as we did not request IntentsDirectMessages.
-func (app *application) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	var response WsJsonResponse
-	response.Message = m.Content
-	response.Author = m.Author.Username
-	response.Action = "user_message"
-	app.broadcastToAll(response)
+func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore all messages created by the bot itself
 	// This isn't required in this specific example but it's a good practice.
 	if m.Author.ID == s.State.User.ID {
@@ -68,7 +90,6 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 	fmt.Printf("%+v\n", m.Timestamp)
 	fmt.Printf("%+v\n", m.EditedTimestamp)
 	fmt.Printf("%+v\n", m.Content)
-
 	// In this example, we only care about messages that are "ping".
 	if m.Content != "ping" {
 		return
@@ -105,46 +126,6 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 		fmt.Println("error sending DM message:", err)
 		_, err := s.ChannelMessageSend(
 			m.ChannelID,
-			"Failed to send you a DM. "+
-				"Did you disable DM in your privacy settings?",
-		)
-		if err != nil {
-			return
-		}
-	}
-}
-func (app *application) sendMessage(m string) {
-	// We create the private channel with the user who sent the message.
-	channel, err := s.Channel("613450731802066947")
-	if err != nil {
-		// If an error occurred, we failed to create the channel.
-		//
-		// Some common causes are:
-		// 1. We don't share a server with the user (not possible here).
-		// 2. We opened enough DM channels quickly enough for Discord to
-		//    label us as abusing the endpoint, blocking us from opening
-		//    new ones.
-		fmt.Println("error creating channel:", err)
-		_, err := s.ChannelMessageSend(
-			m,
-			"Something went wrong while sending the DM!",
-		)
-		if err != nil {
-			return
-		}
-		return
-	}
-	// Then we send the message through the channel we created.
-	_, err = s.ChannelMessageSend(channel.ID, m)
-	if err != nil {
-		// If an error occurred, we failed to send the message.
-		//
-		// It may occur either when we do not share a server with the
-		// user (highly unlikely as we just received a message) or
-		// the user disabled DM in their settings (more likely).
-		fmt.Println("error sending DM message:", err)
-		_, err := s.ChannelMessageSend(
-			m,
 			"Failed to send you a DM. "+
 				"Did you disable DM in your privacy settings?",
 		)
