@@ -53,8 +53,10 @@ func main() {
 	flag.StringVar(&cfg.env, "env", "development", "Application environment {development|production}")
 	flag.StringVar(&cfg.api, "api", "http://localhost:4001", "URL to Api")
 
+	flag.StringVar(&cfg.bot.token, "token", "NjAwNzUxNzk3MzIxMzM0Nzg0.GIcqhB.V_T63zjl2grc4F_YTIgI7bzAETiq_IQgju6_KY", "Bot Token")
 	flag.Parse()
-	cfg.bot.token = os.Getenv("BOT_TOKEN")
+	//cfg.bot.token = os.Getenv("BOT_TOKEN")
+
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
@@ -69,6 +71,12 @@ func main() {
 	}
 
 	err := app.serve()
+	if err != nil {
+		app.errorLog.Println(err)
+		log.Fatal(err)
+	}
+	app.startBot()
+	err = app.startBot()
 	if err != nil {
 		app.errorLog.Println(err)
 		log.Fatal(err)

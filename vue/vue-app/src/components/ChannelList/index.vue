@@ -21,7 +21,7 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
         </div>
       </template>
       <template #content>
-        <channel-button channel-name="1" is-active="true"/>
+        <channel-button channel-name="1" is-active/>
         <channel-button channel-name="2"/>
         <channel-button channel-name="3"/>
         <channel-button channel-name="4"/>

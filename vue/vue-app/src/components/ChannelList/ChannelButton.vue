@@ -2,7 +2,7 @@
 import HashTagIcon from "vue-material-design-icons/Pound.vue";
 import InviteIcon from "vue-material-design-icons/AccountPlus.vue";
 import SettingsIcon from "vue-material-design-icons/CogOutline.vue";
-const props = defineProps({
+defineProps({
   channelName:{type: String, required: true},
   isActive:{type: Boolean}
 })

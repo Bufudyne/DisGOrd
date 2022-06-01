@@ -19,7 +19,7 @@
     <div class="channel-data__input-wrapper">
       <input type="text" name="text" placeholder="Message #yada" id="">
       <div class="channel-data__icon">
-        <at-icon :size="24"/>
+        <at-icon @click="sendws" :size="24"/>
       </div>
     </div>
   </div>
@@ -28,6 +28,18 @@
 <script setup>
 import AtIcon from "vue-material-design-icons/At.vue"
 import ChannelMessage from "./ChannelMessage.vue"
+
+const websocket= new WebSocket("ws://localhost:4001/ws")
+
+
+websocket.onopen=()=>console.log("test")
+function sendws(){
+  let msg={
+    "greeting": "fuck you"
+  }
+
+  websocket.send(JSON.stringify(msg))
+}
 </script>
 
 <style lang="scss" scoped>
