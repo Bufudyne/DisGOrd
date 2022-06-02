@@ -1,23 +1,11 @@
 <template>
   <div class="channel-data">
     <div class="channel-data__messages">
-      <channel-message
-          author="Lol"
-          content="asdfafsf"
-          date="12/21/2323"
-          is-bot=True
-          is-mention=True,
-      />
-      <channel-message
-          author="Lol"
-          content="asdfafsf"
-          date="12/21/2323"
-
-      />
       <channel-message v-for="data in messages"
                        :author=data.author
                        :content=data.message
-                       date="12/21/2323"
+                       :avatar=data.avatar
+                       :date=data.timestamp
 
       />
 
@@ -39,20 +27,35 @@ import ChannelMessage from "./ChannelMessage.vue"
 import {reactive, ref} from "vue";
 const message = ref('')
 const messages = reactive([])
+const guildId="602887413819506700"
+const channelId="602892529997840399"
+//const guildId="572601260222447637"
+//const channelId="613450731802066947"
 const websocket = new WebSocket("ws://localhost:4001/ws")
+
+
 
 websocket.onmessage = (msg) => {
   let data = JSON.parse(msg.data)
+  console.log(data)
   switch (data.action) {
     case "user_message":
-      messages.push(data);
+      data= data["chat_message"]
+      if (guildId === data['guild_id']){
+        if(channelId=== data['channel_id']){
+          data={"author": data['author']['username'],"message":data['content'], "avatar":data['author']['avatar'],"timestamp":data['timestamp']}
+          messages.push(data);
+        }
+      }
       break;
+      case"debug":
+        console.log(data["message"])
   }
 
 }
 
 
-websocket.onopen = () => console.log("test")
+websocket.onopen = () => console.log("WS Open")
 
 function sendws() {
   let jsonData = {};

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -74,11 +75,10 @@ func (app *application) broadcastToAll(response WsJsonResponse) {
 
 //WsJsonResponse define the response sent back from websocket
 type WsJsonResponse struct {
-	Action      string `json:"action"`
-	Author      string `json:"author"`
-	Date        string `json:"date"`
-	Message     string `json:"message"`
-	MessageType string `json:"message_type"`
+	Action      string                  `json:"action"`
+	Message     string                  `json:"message"`
+	ChatMessage discordgo.MessageCreate `json:"chat_message"`
+	MessageType string                  `json:"message_type"`
 }
 
 type WsPayload struct {
@@ -96,8 +96,9 @@ func (app *application) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	log.Println("Client connected to endpoint")
 
 	var response WsJsonResponse
-	response.Message = `<em><mall>Connected to server</small></em>`
-
+	response.Action = "debug"
+	response.Message = "Connected to WS"
+	response.MessageType = "log_message"
 	conn := WebSocketConnection{Conn: ws}
 	clients[conn] = ""
 

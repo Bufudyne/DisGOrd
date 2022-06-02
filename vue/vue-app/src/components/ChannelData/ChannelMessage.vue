@@ -1,6 +1,6 @@
 <template>
   <div class="channel-message" :class="{'mention-alert':isMention}">
-    <div class="channel-message__avatar"></div>
+    <img class="channel-message__avatar" :src="avatar" alt=""/>
     <div class="channel-message__data">
       <div class="channel-message__metadata">
         <div class="channel-message__author">
@@ -18,6 +18,7 @@
 defineProps( {
   author: {String, required:true},
   date:{String, required:true},
+  avatar:{String, required:true},
   content:{String, required:true},
   isMention: {Boolean, required:false},
   isBot:{Boolean, required:false}

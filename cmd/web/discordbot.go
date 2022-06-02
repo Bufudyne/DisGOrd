@@ -53,9 +53,10 @@ func (app *application) startBot() error {
 // server as we did not request IntentsDirectMessages.
 func (app *application) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var response WsJsonResponse
-	response.Message = m.Content
-	response.Author = m.Author.Username
+
 	response.Action = "user_message"
+	m.Author.Avatar = m.Author.AvatarURL("128")
+	response.ChatMessage = *m
 	app.broadcastToAll(response)
 	// Ignore all messages created by the bot itself
 	// This isn't required in this specific example but it's a good practice.
@@ -115,7 +116,7 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 }
 func (app *application) sendMessage(m string) {
 	// We create the private channel with the user who sent the message.
-	channel, err := s.Channel("613450731802066947")
+	channel, err := s.Channel("602892529997840399")
 	if err != nil {
 		// If an error occurred, we failed to create the channel.
 		//
