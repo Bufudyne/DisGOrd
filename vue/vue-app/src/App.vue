@@ -1,13 +1,3 @@
-<script setup>
-import ServerList from "./components/SeverList/index.vue"
-import ServerName from "./components/ServerName/index.vue"
-import ChannelList from "./components/ChannelList/index.vue"
-import UserInfo from "./components/UserInfo/UserInfo.vue"
-import ChannelInfo from "./components/ChannelInfo/ChannelInfo.vue"
-import ChannelData from "./components/ChannelData/ChannelData.vue"
-
-</script>
-
 <template>
   <div id="grid">
     <server-list/>
@@ -15,15 +5,44 @@ import ChannelData from "./components/ChannelData/ChannelData.vue"
     <channel-list/>
     <user-info/>
     <channel-info/>
-    <channel-data/>
+    <channel-data ref="channelData"/>
   </div>
 </template>
 
-<script>
+<script setup>
+import ServerList from "./components/SeverList/index.vue"
+import ServerName from "./components/ServerName/index.vue"
+import ChannelList from "./components/ChannelList/index.vue"
+import UserInfo from "./components/UserInfo/UserInfo.vue"
+import ChannelInfo from "./components/ChannelInfo/ChannelInfo.vue"
+import ChannelData from "./components/ChannelData/ChannelData.vue"
+import {ref} from "vue";
 
-export default {
-  name: "App",
+const channelData = ref(null)
+const websocket = new WebSocket("ws://localhost:4001/ws")
+websocket.onmessage = (msg) => {
+  let data = JSON.parse(msg.data)
+  console.log(data)
+  switch (data.action) {
+    case "user_message":
+      data = data["chat_message"]
+      data = {
+        "author": data['author']['username'],
+        "message": data['content'],
+        "avatar": data['author']['avatar'],
+        "timestamp": data['timestamp']
+      }
+      console.log(data)
+      channelData.updateMessages(data)
+      break;
+    case"debug":
+      console.log(data["message"])
+  }
+
 }
+
+
+websocket.onopen = () => console.log("WS Open")
 </script>
 
 <style lang="scss">

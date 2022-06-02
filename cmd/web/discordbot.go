@@ -114,6 +114,14 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 		}
 	}
 }
+func (app *application) getChannelsInGuild(guild string) *[]*discordgo.Channel {
+	channelList, err := s.GuildChannels(guild)
+	if err != nil {
+		app.errorLog.Println(err)
+	}
+	return &channelList
+}
+
 func (app *application) sendMessage(m string) {
 	// We create the private channel with the user who sent the message.
 	channel, err := s.Channel("602892529997840399")

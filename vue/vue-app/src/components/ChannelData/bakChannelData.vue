@@ -1,7 +1,7 @@
 <template>
   <div class="channel-data">
     <div ref="channelMessages" class="channel-data__messages">
-      <div>{{messages}}</div>
+      <div></div>
       <channel-message v-for="data in messages"
                        :author=data.author
                        :avatar=data.avatar
@@ -28,24 +28,16 @@ const props = defineProps({
   guildId:  String,
   channelId:  String,
 })
-
 const message = ref('')
 const messages = reactive([])
-const updateMessages = (msg) => { messages.push(msg) }
-
-defineExpose({
-  updateMessages
-})
-/*
 const guildId = "602887413819506700"
-const channelId = "602892529997840399"*/
+const channelId = "602892529997840399"
 //const guildId="572601260222447637"
 //const channelId="613450731802066947"
-//const websocket = new WebSocket("ws://localhost:4001/ws")
 
+const websocket = new WebSocket("ws://localhost:4001/ws")
 const channelMessages = ref(null)
 
-/*
 
 websocket.onmessage = (msg) => {
   let data = JSON.parse(msg.data)
@@ -69,11 +61,10 @@ websocket.onmessage = (msg) => {
     case"debug":
       console.log(data["message"])
   }
-
 }
 
 
-websocket.onopen = () => console.log("WS Open")*/
+websocket.onopen = () => console.log("WS Open")
 
 function sendws() {
   let jsonData = {};
@@ -137,7 +128,6 @@ function sendws() {
         color: var(--grey);
       }
     }
-
   }
 
   &__icon {
