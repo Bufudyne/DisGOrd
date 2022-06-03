@@ -12,6 +12,7 @@ var s *discordgo.Session
 
 func (app *application) startBot() error {
 	// Create a new Discord session using the provided bot token.
+
 	dg, err := discordgo.New("Bot " + app.config.bot.token)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
@@ -53,7 +54,7 @@ func (app *application) startBot() error {
 // server as we did not request IntentsDirectMessages.
 func (app *application) messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var response WsJsonResponse
-
+	app.getServerList()
 	response.Action = "user_message"
 	m.Author.Avatar = m.Author.AvatarURL("128")
 	response.ChatMessage = *m
@@ -113,6 +114,44 @@ func (app *application) messageCreate(s *discordgo.Session, m *discordgo.Message
 			return
 		}
 	}
+}
+func (app *application) getServerList() []ChannelData {
+	s.State.RLock()
+	guilds := s.State.Guilds
+	var guildData []ChannelData
+	for i := 0; i < len(guilds); i++ {
+		var test ChannelData
+		guildChannels, err := s.GuildChannels(guilds[i].ID)
+		if err != nil {
+			app.errorLog.Println(err)
+		}
+		test.GuildID = guilds[i].ID
+		test.ChannelList = guildChannels
+		guildData = append(guildData, test)
+	}
+	s.State.RUnlock()
+	return guildData
+	/*client := &http.Client{}
+	req, err := http.NewRequest(http.MethodGet, "https://discordapp.com/api/users/@me/guilds", nil)
+	req.Header.Set("Authorization", app.config.bot.token)
+	if err != nil {
+		app.errorLog.Println(err)
+	}
+	// appending to existing query args
+	q := req.URL.Query()
+	// assign encoded query string to http request
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := client.Do(req)
+	if err != nil {
+		app.errorLog.Println(err)
+	}
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(resp.Status)
+	fmt.Println(string(responseBody))*/
 }
 func (app *application) getChannelsInGuild(guild string) *[]*discordgo.Channel {
 	channelList, err := s.GuildChannels(guild)

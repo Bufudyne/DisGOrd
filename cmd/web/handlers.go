@@ -78,7 +78,14 @@ type WsJsonResponse struct {
 	Action      string                  `json:"action"`
 	Message     string                  `json:"message"`
 	ChatMessage discordgo.MessageCreate `json:"chat_message"`
-	MessageType string                  `json:"message_type"`
+	GuildList   []ChannelData           `json:"guild_list"`
+	//aGuildList  []*discordgo.Guild      `json:"guild_list"`
+	MessageType string `json:"message_type"`
+}
+
+type ChannelData struct {
+	GuildID     string               `json:"guild_id"`
+	ChannelList []*discordgo.Channel `json:"channel_list"`
 }
 
 type WsPayload struct {
@@ -101,10 +108,17 @@ func (app *application) WsEndpoint(w http.ResponseWriter, r *http.Request) {
 	response.MessageType = "log_message"
 	conn := WebSocketConnection{Conn: ws}
 	clients[conn] = ""
-
 	err = ws.WriteJSON(response)
 	if err != nil {
 		app.errorLog.Println(err)
 	}
+
+	response.Action = "guild_list"
+	response.GuildList = app.getServerList()
+	err = ws.WriteJSON(response)
+	if err != nil {
+		app.errorLog.Println(err)
+	}
+
 	go app.ListenForWS(&conn)
 }

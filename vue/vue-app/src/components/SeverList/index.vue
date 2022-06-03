@@ -1,24 +1,23 @@
-<script setup>
-import ServerButton from "./ServerButton.vue"
-</script>
 <template>
-<div class="channel-list">
-  <ServerButton isHome/>
-  <div class="separator"></div>
-  <ServerButton :mentions="3" />
-  <ServerButton has-notification :mentions="1"/>
-  <ServerButton />
-  <ServerButton has-notification/>
-  <server-button v-for="servers in 24" :key="servers.id"/>
-</div>
+  <div class="channel-list">
+    <ServerButton isHome/>
+    <div class="separator"></div>
+    <server-button v-for="guild in guildList" :key="guildList.id"/>
+  </div>
 </template>
 
-<script>
+<script setup>
+import ServerButton from "./ServerButton.vue"
 
+import {storeToRefs} from "pinia/dist/pinia";
+import {useDiscord} from "../../store/discord";
+
+const storeDiscord = useDiscord()
+const {guildList} = storeToRefs(storeDiscord)
 </script>
 
-<style scoped lang="scss">
-.channel-list{
+<style lang="scss" scoped>
+.channel-list {
   grid-area: SL;
   display: flex;
   flex-direction: column;
@@ -28,12 +27,14 @@ import ServerButton from "./ServerButton.vue"
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  &::-webkit-scrollbar{
+
+  &::-webkit-scrollbar {
     display: none;
 
   }
 }
-.separator{
+
+.separator {
   width: 32px;
   border-bottom: solid 3px var(--quaternary);
   margin-bottom: 8px;

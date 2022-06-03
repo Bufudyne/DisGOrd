@@ -1,13 +1,11 @@
-<script setup>
-import ExpandIcon from "vue-material-design-icons/ChevronDown.vue";
-import BiohazardIcon from "vue-material-design-icons/VectorBezier.vue"</script>
+
 <template>
   <div class="channel-list">
     <div class="title-container">
       <div class="icon">
         <BiohazardIcon :size="18"></BiohazardIcon>
       </div>
-      <div class="title">A name</div>
+
 
     </div>
     <div class="icon">
@@ -16,8 +14,13 @@ import BiohazardIcon from "vue-material-design-icons/VectorBezier.vue"</script>
   </div>
 </template>
 
-<script>
-
+<script setup>
+import ExpandIcon from "vue-material-design-icons/ChevronDown.vue";
+import BiohazardIcon from "vue-material-design-icons/VectorBezier.vue"
+import {useDiscord} from "../../store/discord";
+import {storeToRefs} from "pinia/dist/pinia";
+const storeDiscord = useDiscord()
+const {guildList} = storeToRefs(storeDiscord)
 </script>
 
 <style scoped lang="scss">
