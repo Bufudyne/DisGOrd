@@ -161,9 +161,9 @@ func (app *application) getChannelsInGuild(guild string) *[]*discordgo.Channel {
 	return &channelList
 }
 
-func (app *application) sendMessage(m string) {
+func (app *application) sendMessage(m ChannelMessage) {
 	// We create the private channel with the user who sent the message.
-	channel, err := s.Channel("602892529997840399")
+	channel, err := s.Channel(m.Channel)
 	if err != nil {
 		// If an error occurred, we failed to create the channel.
 		//
@@ -174,7 +174,7 @@ func (app *application) sendMessage(m string) {
 		//    new ones.
 		fmt.Println("error creating channel:", err)
 		_, err := s.ChannelMessageSend(
-			m,
+			m.Message,
 			"Something went wrong while sending the DM!",
 		)
 		if err != nil {
@@ -183,7 +183,7 @@ func (app *application) sendMessage(m string) {
 		return
 	}
 	// Then we send the message through the channel we created.
-	_, err = s.ChannelMessageSend(channel.ID, m)
+	_, err = s.ChannelMessageSend(channel.ID, m.Message)
 	if err != nil {
 		// If an error occurred, we failed to send the message.
 		//
@@ -192,7 +192,7 @@ func (app *application) sendMessage(m string) {
 		// the user disabled DM in their settings (more likely).
 		fmt.Println("error sending DM message:", err)
 		_, err := s.ChannelMessageSend(
-			m,
+			m.Message,
 			"Failed to send you a DM. "+
 				"Did you disable DM in your privacy settings?",
 		)

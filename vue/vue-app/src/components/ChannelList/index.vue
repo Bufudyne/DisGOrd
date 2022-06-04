@@ -19,7 +19,7 @@ function setChannel(id){
 <template>
   <div class="channel-list">
     <div>
-    <div v-for="cat in storeDiscord.getCategories()" :key="cat.id">
+    <div v-for="cat in storeDiscord.getCategories" :key="cat.id">
 
       <accordion v-if="cat.children.length >0">
         <template #header>

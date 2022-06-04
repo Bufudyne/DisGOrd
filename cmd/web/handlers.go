@@ -54,7 +54,7 @@ func (app *application) ListenToWsChannel() {
 		switch e.Action {
 		case "send_to_channel":
 			app.errorLog.Println(e.Message)
-			app.sendMessage(e.Message)
+			app.sendMessage(e.ChannelMessage)
 			break
 		}
 	}
@@ -89,9 +89,15 @@ type ChannelData struct {
 }
 
 type WsPayload struct {
-	Action  string              `json:"action"`
-	Message string              `json:"message"`
-	Conn    WebSocketConnection `json:"-"`
+	Action         string              `json:"action"`
+	Message        string              `json:"message"`
+	ChannelMessage ChannelMessage      `json:"channel_message"`
+	Conn           WebSocketConnection `json:"-"`
+}
+type ChannelMessage struct {
+	Guild   string `json:"guild"`
+	Channel string `json:"channel"`
+	Message string `json:"message"`
 }
 
 //WsEndpoint upgrades connection to websocket

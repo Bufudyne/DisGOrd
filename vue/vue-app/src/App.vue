@@ -5,7 +5,7 @@
     <channel-list/>
     <user-info/>
     <channel-info/>
-    <channel-data v-on="SendMessage"/>
+    <channel-data @sendMessage="SendMessage()"/>
   </div>
 </template>
 
@@ -24,12 +24,16 @@ const storeDiscord = useDiscord()
 const {channelMessages, messageList, guildList} = storeToRefs(storeDiscord)
 const websocket = new WebSocket("ws://localhost:4001/ws")
 
-function SendMessage() {
+const SendMessage = () => {
   let jsonData = {};
   jsonData["action"] = "send_to_channel";
-  jsonData["message"] = message.value;
+  jsonData["channel_message"] = {
+    guild: storeDiscord.currentGuild,
+    channel: storeDiscord.currentChannel,
+    message: storeDiscord.textMessage
+  }
   websocket.send(JSON.stringify(jsonData));
-  message.value = "";
+  storeDiscord.textMessage = "";
 
 
 }
@@ -59,8 +63,8 @@ websocket.onmessage = (msg) => {
       break;
 
     case"guild_list": {
-      let startingGuild= data["guild_list"][0]["guild_id"]
-      let startingChannel= data["guild_list"][0]["channel_list"][0]["id"]
+      let startingGuild = data["guild_list"][0]["guild_id"]
+      let startingChannel = data["guild_list"][0]["channel_list"][0]["id"]
       data["guild_list"].forEach(guild => {
         const channelDict = {}
         guild["channel_list"].forEach(channel => {
@@ -95,7 +99,7 @@ websocket.onmessage = (msg) => {
       })
       //storeDiscord.currentGuild =startingGuild;
       //storeDiscord.currentChannel = startingChannel;
-      storeDiscord.currentGuild ="572601260222447637";
+      storeDiscord.currentGuild = "572601260222447637";
       storeDiscord.currentChannel = "613450731802066947";
 
 

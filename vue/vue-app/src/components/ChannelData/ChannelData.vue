@@ -11,8 +11,8 @@
       </div>
     </div>
     <div class="channel-data__input-wrapper">
-      <form @submit.prevent="$emit('SendMessage', message)">
-        <input v-model="message" placeholder="Message #yada" type="text">
+      <form @submit.prevent="emit('sendMessage')">
+        <input v-model="storeDiscord.textMessage" placeholder="Message #yada" type="text">
       </form>
       <div class="channel-data__icon">
         <at-icon :size="24"/>
@@ -35,6 +35,9 @@ const storeDiscord = useDiscord()
 const {messageList, currentGuild, currentChannel} = storeToRefs(storeDiscord)
 
 const emit= defineEmits(['sendMessage'])
+const cleanup= ()=>{
+
+}
 
 </script>
 
