@@ -5,7 +5,7 @@
     <channel-list/>
     <user-info/>
     <channel-info/>
-    <channel-data ref="channelData"/>
+    <channel-data/>
   </div>
 </template>
 
@@ -21,28 +21,38 @@ import {useDiscord} from "./store/discord";
 import {storeToRefs} from "pinia/dist/pinia";
 
 const storeDiscord = useDiscord()
-const {channelMessages, guildList} = storeToRefs(storeDiscord)
+const {channelMessages, messageList, guildList} = storeToRefs(storeDiscord)
 
 const websocket = new WebSocket("ws://localhost:4001/ws")
 websocket.onmessage = (msg) => {
   let data = JSON.parse(msg.data)
-  //console.log(data);
+
   switch (data.action) {
     case "user_message":
-      data = data["chat_message"]
-      data = {
-        "author": data['author']['username'],
-        "message": data['content'],
-        "avatar": data['author']['avatar'],
-        "timestamp": data['timestamp']
+      let chMessage = data["chat_message"]
+//      console.log(chMessage);
+      let content = {
+        "author": chMessage['author']['username'],
+        "message": chMessage['content'],
+        "avatar": chMessage['author']['avatar'],
+        "timestamp": chMessage['timestamp']
+      };
+      //storeDiscord.messageList[chMessage["guild_id"]] = {};
+      if (!storeDiscord.messageList[chMessage["guild_id"]]) {
+        storeDiscord.messageList[chMessage["guild_id"]] = {}
       }
-      storeDiscord.channelMessages.push(data)
+      if (storeDiscord.messageList[chMessage["guild_id"]][chMessage["channel_id"]]) {
+        storeDiscord.messageList[chMessage["guild_id"]][chMessage["channel_id"]].push(content)
+      } else {
+        storeDiscord.messageList[chMessage["guild_id"]][chMessage["channel_id"]] = [content]
+      }
+      storeDiscord.channelMessages.push(content)
       break;
+
     case"guild_list": {
-      console.log(data["guild_list"]);
+      let startingGuild= data["guild_list"][0]["guild_id"]
+      let startingChannel= data["guild_list"][0]["channel_list"][0]["id"]
       data["guild_list"].forEach(guild => {
-        console.log(guild)
-        const guildDict ={ }
         const channelDict = {}
         guild["channel_list"].forEach(channel => {
           if (channel["parent_id"] !== "") {
@@ -53,7 +63,7 @@ websocket.onmessage = (msg) => {
                 "id": channel["id"],
                 "name": channel["name"],
                 "position": channel["position"],
-                children: [{"id": channel["id"],"position": channel["position"], "name": channel["name"]}]
+                children: [{"id": channel["id"], "position": channel["position"], "name": channel["name"]}]
               }
             }
           } else {
@@ -69,9 +79,15 @@ websocket.onmessage = (msg) => {
               }
             }
           }
-          storeDiscord.guildList[guild["guild_id"]]={"id": guild["guild_id"], "ChannelList":channelDict}
+          storeDiscord.guildList[guild["guild_id"]] = {"id": guild["guild_id"], "ChannelList": channelDict}
         })
       })
+      //storeDiscord.currentGuild =startingGuild;
+      //storeDiscord.currentChannel = startingChannel;
+      storeDiscord.currentGuild ="572601260222447637";
+      storeDiscord.currentChannel = "613450731802066947";
+
+
       break;
     }
     case"debug":

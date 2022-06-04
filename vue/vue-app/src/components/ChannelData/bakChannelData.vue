@@ -1,8 +1,7 @@
 <template>
   <div class="channel-data">
-    <div ref="channelMessages" class="channel-data__messages">
-      <div></div>
-      <channel-message v-for="data in messages"
+    <div class="channel-data__messages">
+      <channel-message v-for="data in channelMessages"
                        :author=data.author
                        :avatar=data.avatar
                        :content=data.message
@@ -23,48 +22,16 @@
 <script setup>
 import AtIcon from "vue-material-design-icons/At.vue"
 import ChannelMessage from "./ChannelMessage.vue"
-import {reactive, ref} from "vue";
-const props = defineProps({
-  guildId:  String,
-  channelId:  String,
-})
-const message = ref('')
-const messages = reactive([])
-const guildId = "602887413819506700"
-const channelId = "602892529997840399"
-//const guildId="572601260222447637"
-//const channelId="613450731802066947"
+import {ref} from "vue";
 
-const websocket = new WebSocket("ws://localhost:4001/ws")
-const channelMessages = ref(null)
+const message = ref('');
+import {storeToRefs} from "pinia/dist/pinia";
+import {useDiscord} from "../../store/discord";
 
 
-websocket.onmessage = (msg) => {
-  let data = JSON.parse(msg.data)
-  console.log(data)
-  switch (data.action) {
-    case "user_message":
-      data = data["chat_message"]
-      if (guildId === data['guild_id']) {
-        if (channelId === data['channel_id']) {
-          data = {
-            "author": data['author']['username'],
-            "message": data['content'],
-            "avatar": data['author']['avatar'],
-            "timestamp": data['timestamp']
-          }
-          messages.push(data);
-          channelMessages.value.lastElementChild.scrollIntoView({behavior: 'smooth'});
-        }
-      }
-      break;
-    case"debug":
-      console.log(data["message"])
-  }
-}
+const storeDiscord = useDiscord()
+const {channelMessages} = storeToRefs(storeDiscord)
 
-
-websocket.onopen = () => console.log("WS Open")
 
 function sendws() {
   let jsonData = {};
@@ -128,6 +95,7 @@ function sendws() {
         color: var(--grey);
       }
     }
+
   }
 
   &__icon {

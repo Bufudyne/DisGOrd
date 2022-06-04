@@ -1,12 +1,23 @@
 <template>
   <div class="channel-data">
     <div class="channel-data__messages">
-      <channel-message v-for="data in channelMessages"
-                       :author=data.author
-                       :avatar=data.avatar
-                       :content=data.message
-                       :date=data.timestamp
-      />
+      <!--<div v-for="(data, key) in messageList">
+        <channel-message v-if="key === storeDiscord.currentGuild"
+            :author=key
+            :avatar=data.avatar
+            :content=data
+            :date=data.timestamp
+        />
+
+    </div>-->
+      <div v-for="(data, key) in storeDiscord.fuck(storeDiscord.currentGuild)">
+        <channel-message
+            author="key"
+            avatar="data.avatar"
+            content="data"
+            date="data.timestamp"
+        />
+      </div>
     </div>
     <div class="channel-data__input-wrapper">
       <form @submit.prevent="sendws">
@@ -23,20 +34,15 @@
 import AtIcon from "vue-material-design-icons/At.vue"
 import ChannelMessage from "./ChannelMessage.vue"
 import {ref} from "vue";
-
-const message = ref('');
 import {storeToRefs} from "pinia/dist/pinia";
 import {useDiscord} from "../../store/discord";
 
+const message = ref('');
+
 
 const storeDiscord = useDiscord()
-const {channelMessages} = storeToRefs(storeDiscord)
-/*
-const guildId = "602887413819506700"
-const channelId = "602892529997840399"*/
-//const guildId="572601260222447637"
-//const channelId="613450731802066947"
-//const websocket = new WebSocket("ws://localhost:4001/ws")
+const {messageList} = storeToRefs(storeDiscord)
+
 
 function sendws() {
   let jsonData = {};
