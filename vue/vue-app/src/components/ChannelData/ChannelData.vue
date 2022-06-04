@@ -1,26 +1,17 @@
 <template>
   <div class="channel-data">
     <div class="channel-data__messages">
-      <!--<div v-for="(data, key) in messageList">
-        <channel-message v-if="key === storeDiscord.currentGuild"
-            :author=key
-            :avatar=data.avatar
-            :content=data
-            :date=data.timestamp
-        />
-
-    </div>-->
-      <div v-for="(data, key) in storeDiscord.fuck(storeDiscord.currentGuild)">
-        <channel-message
-            author="key"
-            avatar="data.avatar"
-            content="data"
-            date="data.timestamp"
+      <div v-if="storeDiscord.currentGuild!=='0'">
+        <channel-message v-for="data in storeDiscord.getMessages" :key="data.id"
+                         :author=data.author
+                         :avatar=data.avatar
+                         :content=data.message
+                         :date=data.timestamp
         />
       </div>
     </div>
     <div class="channel-data__input-wrapper">
-      <form @submit.prevent="sendws">
+      <form @submit.prevent="$emit('SendMessage', message)">
         <input v-model="message" placeholder="Message #yada" type="text">
       </form>
       <div class="channel-data__icon">
@@ -41,18 +32,10 @@ const message = ref('');
 
 
 const storeDiscord = useDiscord()
-const {messageList} = storeToRefs(storeDiscord)
+const {messageList, currentGuild, currentChannel} = storeToRefs(storeDiscord)
 
+const emit= defineEmits(['sendMessage'])
 
-function sendws() {
-  let jsonData = {};
-  jsonData["action"] = "send_to_channel";
-  jsonData["message"] = message.value;
-  websocket.send(JSON.stringify(jsonData));
-  message.value = "";
-
-
-}
 </script>
 
 <style lang="scss" scoped>

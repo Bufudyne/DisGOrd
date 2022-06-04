@@ -5,7 +5,7 @@
     <channel-list/>
     <user-info/>
     <channel-info/>
-    <channel-data/>
+    <channel-data v-on="SendMessage"/>
   </div>
 </template>
 
@@ -22,8 +22,18 @@ import {storeToRefs} from "pinia/dist/pinia";
 
 const storeDiscord = useDiscord()
 const {channelMessages, messageList, guildList} = storeToRefs(storeDiscord)
-
 const websocket = new WebSocket("ws://localhost:4001/ws")
+
+function SendMessage() {
+  let jsonData = {};
+  jsonData["action"] = "send_to_channel";
+  jsonData["message"] = message.value;
+  websocket.send(JSON.stringify(jsonData));
+  message.value = "";
+
+
+}
+
 websocket.onmessage = (msg) => {
   let data = JSON.parse(msg.data)
 
@@ -46,7 +56,6 @@ websocket.onmessage = (msg) => {
       } else {
         storeDiscord.messageList[chMessage["guild_id"]][chMessage["channel_id"]] = [content]
       }
-      storeDiscord.channelMessages.push(content)
       break;
 
     case"guild_list": {
@@ -79,7 +88,9 @@ websocket.onmessage = (msg) => {
               }
             }
           }
+
           storeDiscord.guildList[guild["guild_id"]] = {"id": guild["guild_id"], "ChannelList": channelDict}
+          //console.log(storeDiscord.guildList)
         })
       })
       //storeDiscord.currentGuild =startingGuild;

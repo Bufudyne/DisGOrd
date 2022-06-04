@@ -4,6 +4,7 @@ import InviteIcon from "vue-material-design-icons/AccountPlus.vue";
 import SettingsIcon from "vue-material-design-icons/CogOutline.vue";
 defineProps({
   channelName:{type: String, required: true},
+  channelId:{type: String, required: true},
   isActive:{type: Boolean}
 })
 </script>

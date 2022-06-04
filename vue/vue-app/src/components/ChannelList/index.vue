@@ -1,12 +1,56 @@
 <script setup>
 import Accordion from "./Accordion/Accordion.vue"
 import ChannelButton from "./ChannelButton.vue"
-import ExpandIcon from "vue-material-design-icons/ChevronDown.vue";
-import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
+import ExpandIcon from "vue-material-design-icons/ChevronDown.vue"
+import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"
+
+import {storeToRefs} from "pinia/dist/pinia";
+import {useDiscord} from "../../store/discord";
+
+
+const storeDiscord = useDiscord()
+const {messageList} = storeToRefs(storeDiscord)
+
+function setChannel(id){
+  storeDiscord.currentChannel=id
+}
+</script>
 
 <template>
   <div class="channel-list">
-    <accordion>
+    <div>
+    <div v-for="cat in storeDiscord.getCategories()" :key="cat.id">
+
+      <accordion v-if="cat.children.length >0">
+        <template #header>
+          <div class="category-card">
+          <span class="category__name">
+          {{ cat.name}}
+          </span>
+            <span class="dropdown-icon">
+            <expand-icon :size="12"/>
+          </span>
+            <div class="category-icon">
+              <plus-category-icon :size="18"/>
+            </div>
+          </div>
+        </template>
+        <template #content>
+          <channel-button v-for="child in cat.children" :key="child.id"
+                          @click="setChannel(child.id)"
+                          :channel-name=child.name
+                          :channel-id=child.id
+                          is-active/>
+        </template>
+      </accordion>
+      <channel-button @click="setChannel(cat.id)" v-else
+                      :channel-name=cat.name
+                      :channel-id=cat.id
+                      is-active/>
+
+    </div>
+    </div>
+<!--   <accordion>
       <template #header>
         <div class="category-card">
           <span class="category__name">
@@ -30,7 +74,7 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
         <channel-button channel-name="7"/>
         <channel-button channel-name="8"/>
       </template>
-    </accordion>
+    </accordion>-->
   </div>
 
 </template>
@@ -61,7 +105,8 @@ import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"</script>
   div:last-child {
     margin-left: auto;
   }
-  .category__name{
+
+  .category__name {
     font-family: Whitney-Black, sans-serif;
   }
 

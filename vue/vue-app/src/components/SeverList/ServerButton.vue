@@ -18,6 +18,7 @@ const props= defineProps({
   isHome: Boolean,
   hasNotification: Boolean,
   mentions: Number,
+  id: String,
 })
 </script>
 
