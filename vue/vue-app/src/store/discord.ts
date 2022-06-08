@@ -11,19 +11,28 @@ export const useDiscord = defineStore("discord", {
     }),
     getters: {
         getMessages() {
-            let guild = this.messageList[this.currentGuild] ?? false;
-            if(!guild){
+            if(this.currentGuild !== undefined && this.currentChannel !== undefined) {
+                if(this.messageList[this.currentGuild] !== undefined){
+                    return this.messageList[this.currentGuild][this.currentChannel];
+                }else{
+                    return []
+                }
+
+            }else{
                 return []
             }
-            return guild[this.currentChannel];
-            //return (state) => state.messageList[state.currentGuild][state.currentChannel]
         },
         getCategories() {
-            let guild = this.guildList[this.currentGuild] ?? false;
-            if(!guild){
+            if(this.currentGuild !== undefined && this.currentChannel !== undefined) {
+                if(this.guildList[this.currentGuild] !== undefined){
+                    return this.guildList[this.currentGuild].ChannelList;
+                }else{
+                    return []
+                }
+
+            }else{
                 return []
             }
-            return guild.ChannelList;
                 /*Object.values(
                 this.guildList[this.currentGuild].ChannelList).sort(
                 (a, b) => a.position < b.position ? -1 : a.position > b.position ? 1 : 0)*/

@@ -4,77 +4,59 @@ import ChannelButton from "./ChannelButton.vue"
 import ExpandIcon from "vue-material-design-icons/ChevronDown.vue"
 import PlusCategoryIcon from "vue-material-design-icons/Plus.vue"
 
-import {storeToRefs} from "pinia/dist/pinia";
+
 import {useDiscord} from "../../store/discord";
-
-
+import {ref} from "vue";
 const storeDiscord = useDiscord()
-const {messageList} = storeToRefs(storeDiscord)
 
-function setChannel(id){
-  storeDiscord.currentChannel=id
+const selectedChannel= ref(0)
+
+const setActive= (id, array)=>{
+  storeDiscord.currentChannel = id
+  selectedChannel.value =id
+  array.forEach((item, index) => {
+    return (item === array[index])
+  })
 }
+const isActive = (id)=> {return selectedChannel.value === id}
+
 </script>
 
 <template>
   <div class="channel-list">
     <div>
-    <div v-for="cat in storeDiscord.getCategories" :key="cat.id">
+      <div v-for="cat in storeDiscord.getCategories" :key="cat.id">
 
-      <accordion v-if="cat.children.length >0">
-        <template #header>
-          <div class="category-card">
+        <accordion v-if="cat.children.length >0">
+          <template #header>
+            <div class="category-card">
           <span class="category__name">
-          {{ cat.name}}
+          {{ cat.name }}
           </span>
-            <span class="dropdown-icon">
+              <span class="dropdown-icon">
             <expand-icon :size="12"/>
           </span>
-            <div class="category-icon">
-              <plus-category-icon :size="18"/>
+              <div class="category-icon">
+                <plus-category-icon :size="18"/>
+              </div>
             </div>
-          </div>
-        </template>
-        <template #content>
-          <channel-button v-for="child in cat.children" :key="child.id"
-                          @click="setChannel(child.id)"
-                          :channel-name=child.name
-                          :channel-id=child.id
-                          is-active/>
-        </template>
-      </accordion>
-      <channel-button @click="setChannel(cat.id)" v-else
-                      :channel-name=cat.name
-                      :channel-id=cat.id
-                      is-active/>
+          </template>
+          <template #content>
+            <channel-button v-for="child in cat.children" :key="child.id"
+                            :channel-id=child.id
+                            :channel-name=child.name
+                            :is-active= isActive(child.id)
+                            @click="setActive(child.id, cat.children)"/>
+          </template>
+        </accordion>
+        <channel-button v-else :channel-id=cat.id
+                        :channel-name=cat.name
+                        is-active
+                        @click="setChannel(cat.id)"
+        />
 
+      </div>
     </div>
-    </div>
-<!--   <accordion>
-      <template #header>
-        <div class="category-card">
-          <span class="category__name">
-          test
-          </span>
-          <span class="dropdown-icon">
-            <expand-icon :size="12"/>
-          </span>
-          <div class="category-icon">
-            <plus-category-icon :size="18"/>
-          </div>
-        </div>
-      </template>
-      <template #content>
-        <channel-button channel-name="1" is-active/>
-        <channel-button channel-name="2"/>
-        <channel-button channel-name="3"/>
-        <channel-button channel-name="4"/>
-        <channel-button channel-name="5"/>
-        <channel-button channel-name="6"/>
-        <channel-button channel-name="7"/>
-        <channel-button channel-name="8"/>
-      </template>
-    </accordion>-->
   </div>
 
 </template>

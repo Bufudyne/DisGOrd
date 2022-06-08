@@ -99,8 +99,8 @@ websocket.onmessage = (msg) => {
       })
       //storeDiscord.currentGuild =startingGuild;
       //storeDiscord.currentChannel = startingChannel;
-      storeDiscord.currentGuild = "572601260222447637";
-      storeDiscord.currentChannel = "613450731802066947";
+      storeDiscord.currentGuild = "602887413819506700";
+      storeDiscord.currentChannel = "602892529997840399";
 
 
       break;

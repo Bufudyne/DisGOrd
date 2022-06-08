@@ -9,11 +9,11 @@ defineProps({
 })
 </script>
 <template>
-  <div class="icon-visibility-wrapper" @click="isActive = !isActive">
-    <div class="card">
+  <div class="icon-visibility-wrapper" >
+    <div class="card" :class="{'active':isActive}">
       <div class="channel-info">
         <hash-tag-icon :size="20" class="hash-icon"/>
-        <div class="channel-name overflow" :class="{'selected':isActive}">{{channelName}}</div>
+        <div class="channel-name overflow">{{channelName}}</div>
       </div>
       <div class="channel-actions">
         <invite-icon :size="20" class="icon-actions"/>
@@ -25,9 +25,11 @@ defineProps({
 
 
 <style lang="scss" scoped>
+
 .icon-visibility-wrapper {
   padding: 0 8px;
   height: 34px;
+
   .card {
     display: flex;
     flex-direction: row;
@@ -81,7 +83,7 @@ defineProps({
       position: relative;
     }
 
-    &.active,
+
     &:hover {
       background-color: var(--quinary);
       border-radius: 4px;
@@ -99,6 +101,18 @@ defineProps({
       }
 
     }
+    &.active{
+      .channel-name {
+        color: var(--white);
+      }
+    }
+
+  }
+  &.active{
+    .channel-name {
+      color: var(--white);
+    }
   }
 }
+
 </style>
