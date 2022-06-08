@@ -2,15 +2,21 @@
 import HashTagIcon from "vue-material-design-icons/Pound.vue";
 import InviteIcon from "vue-material-design-icons/AccountPlus.vue";
 import SettingsIcon from "vue-material-design-icons/CogOutline.vue";
-defineProps({
+import {useDiscord} from "../../store/discord";
+import {computed, ref} from "vue";
+const storeDiscord = useDiscord()
+const props =defineProps({
   channelName:{type: String, required: true},
   channelId:{type: String, required: true},
   isActive:{type: Boolean}
 })
+const isSelected = computed(()=>{
+  return props.channelId === storeDiscord.currentChannel
+})
 </script>
 <template>
   <div class="icon-visibility-wrapper" >
-    <div class="card" :class="{'active':isActive}">
+    <div class="card" :class="{'active':isSelected}">
       <div class="channel-info">
         <hash-tag-icon :size="20" class="hash-icon"/>
         <div class="channel-name overflow">{{channelName}}</div>

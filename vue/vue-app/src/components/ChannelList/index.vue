@@ -11,22 +11,15 @@ const storeDiscord = useDiscord()
 
 const selectedChannel= ref(0)
 
-const setActive= (id, array)=>{
+const setActive= (id)=>{
   storeDiscord.currentChannel = id
-  selectedChannel.value =id
-  array.forEach((item, index) => {
-    return (item === array[index])
-  })
 }
-const isActive = (id)=> {return selectedChannel.value === id}
-
 </script>
 
 <template>
   <div class="channel-list">
     <div>
       <div v-for="cat in storeDiscord.getCategories" :key="cat.id">
-
         <accordion v-if="cat.children.length >0">
           <template #header>
             <div class="category-card">
@@ -45,8 +38,7 @@ const isActive = (id)=> {return selectedChannel.value === id}
             <channel-button v-for="child in cat.children" :key="child.id"
                             :channel-id=child.id
                             :channel-name=child.name
-                            :is-active= isActive(child.id)
-                            @click="setActive(child.id, cat.children)"/>
+                            @click="setActive(child.id)"/>
           </template>
         </accordion>
         <channel-button v-else :channel-id=cat.id
